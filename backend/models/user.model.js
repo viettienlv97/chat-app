@@ -1,11 +1,14 @@
-import pool from "../db/connectPostgresDB";
 
 const user = {
-    fullName: {
+    user_id: {
         type: String,
         required: true
     },
-    userName: {
+    full_name: {
+        type: String,
+        required: true
+    },
+    user_name: {
         type: String,
         required: true,
     },
@@ -18,7 +21,11 @@ const user = {
         required: true,
         enum: ['male', 'female']
     },
-    profilePic: {
+    email: {
+        type: String,
+        required: true,
+    },
+    profile_pic: {
         type: String,
         default: '',
     }

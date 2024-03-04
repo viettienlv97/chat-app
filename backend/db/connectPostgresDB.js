@@ -8,14 +8,12 @@ const client = {
     database: 'postgres'
 }
 
-console.log(client);
-
 const pool = new Pool(client)
 
 await pool.connect()
 
 try {
-    const res = await pool.query('SELECT $1::text as message', ['Hello world!'])
+    const res = await pool.query('SELECT $1::text as message', ['Connected to Postgres!'])
     console.log(res.rows[0].message) // Hello world!
  } catch (err) {
     console.error(err);
