@@ -11,6 +11,7 @@ export const getUserBy = async (key, value) => {
     let text = `SELECT * FROM users
                 WHERE ${key} = $1`
     let res = await usersQuerry(text, [value])
+    console.log("res", res);
     return res
 }
 

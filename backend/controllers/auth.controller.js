@@ -1,10 +1,14 @@
 import bcryptjs from 'bcryptjs'
+import {v4 as uuid} from 'uuid'
+
+import generateTokenAndSetCookie from '../utils/generateToken.js'
 import {
     getAllUsers,
     getUserByName,
     findUser,
     addUser
 } from '../services/user.service.js'
+
 
 const genders = ['male', 'female']
 
@@ -34,6 +38,7 @@ export const signup = async (req, res) => {
             })
         }
         let user = await findUser('user_name', userName)
+        console.log("user", user);
         if (!user) {
             user = await findUser('email', email)
         }
@@ -63,7 +68,11 @@ export const signup = async (req, res) => {
         let girlProfilePicUrl = `https://avatar.iran.liara.run/public/girl?userName=${userName}`
         let profilePic = gender === 'male' ? boyProfilePicUrl : girlProfilePicUrl
 
+        let newUserId = uuid()
+
+        generateTokenAndSetCookie(newUserId, res)
         let add = await addUser({
+            id: newUserId,
             fullName,
             userName,
             password: hashedPassword,

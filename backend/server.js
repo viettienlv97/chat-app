@@ -1,8 +1,11 @@
-import express from 'express'
-import morgan from 'morgan'
 import dotenv from 'dotenv'
-import authRoutes from './routes/auth.routes.js'
 dotenv.config()
+
+import express from 'express'
+
+import path from 'path'
+import morgan from 'morgan'
+import authRoutes from './routes/auth.routes.js'
 import pool from './db/connectPostgresDB.js'
 
 const app = express()

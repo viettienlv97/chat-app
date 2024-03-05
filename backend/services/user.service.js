@@ -1,4 +1,3 @@
-import {v4 as uuid} from 'uuid'
 
 import {
     getUserBy,
@@ -23,7 +22,6 @@ export const findUser = async (key, value) => {
 
 export const addUser = async (user) => {
     let res = await createUser({
-        id: uuid(),
         ...user
     })
     return res

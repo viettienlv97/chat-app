@@ -1,4 +1,25 @@
+/*
+    structure:
+    {
+        id: [Primary key] Number (Auto increase),
+        title: String,
+        content: String
+    }
 
+    //Example instance:
+    user = [
+        {
+            id: 1,
+            fullName: Full Name,
+            userName: userName,
+            password: password,
+            email: email,
+            ...
+        },
+        ...
+    ]
+
+*/
 const user = {
     user_id: {
         type: String,
