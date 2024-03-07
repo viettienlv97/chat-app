@@ -22,8 +22,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api', userRoutes)
 
 // Only run on env.dev
-sequelize.sync({ force: false }).then(() => {
-    console.log('Drop and Resync with { force: false }');
+sequelize.sync({ force: true }).then(() => {
+    console.log(`Drop and Resync with { force: true }`);
     app.listen(PORT, () => {
         console.log(`Running on http://localhost:${PORT}`);
     });

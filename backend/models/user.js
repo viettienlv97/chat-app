@@ -1,6 +1,7 @@
-import { Sequelize, DataTypes } from "sequelize"
+import { DataTypes } from "sequelize"
 
 import sequelize from "../config/db.js"
+import Message from "./message.js"
 
 const User = sequelize.define('User', {
     id: {
@@ -30,6 +31,15 @@ const User = sequelize.define('User', {
     profilePic: {
         type: DataTypes.STRING,
     }
+})
+
+User.hasMany(Message, {
+    as: 'sentMessage',
+    foreignKey: 'senderId'
+})
+User.hasMany(Message, {
+    as: 'receivedMessage',
+    foreignKey: 'receiverId'
 })
 
 export default User
