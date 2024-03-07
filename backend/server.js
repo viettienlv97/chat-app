@@ -2,11 +2,11 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import express from 'express'
+import sequelize from './config/db.js'
 
-import path from 'path'
 import morgan from 'morgan'
-import authRoutes from './routes/auth.routes.js'
-import pool from './db/connectPostgresDB.js'
+import authRoutes from './routes/auth.js'
+import userRoutes from './routes/user.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -19,5 +19,14 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api', userRoutes)
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
+// Only run on env.dev
+sequelize.sync({ force: false }).then(() => {
+    console.log('Drop and Resync with { force: false }');
+    app.listen(PORT, () => {
+        console.log(`Running on http://localhost:${PORT}`);
+    });
+});
+
+//app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
