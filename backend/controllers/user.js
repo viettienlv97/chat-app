@@ -1,10 +1,9 @@
 //libs
 //import bcryptjs from 'bcryptjs'
 //import {v4 as uuid} from 'uuid'
-//import { Op } from 'sequelize'
+import { Op } from 'sequelize'
 
 //modules
-import { where } from 'sequelize'
 import User from '../models/user.js'
 import { dataResponse, serverResponse, invalidResponse } from '../utils/httpResponses.js'
 
@@ -24,9 +23,9 @@ export const getUsers = async (req, res) => {
 
 export const getUserDetail = async (req, res) => {
     try {
-        let {id} = req.body
+        let {userId} = req
         let user = await User.findOne({
-            where: id
+            where: userId
         })
     
         if (!user) 
@@ -34,6 +33,19 @@ export const getUserDetail = async (req, res) => {
     
         return dataResponse(res, 200, user)
     } catch (error) {
+        return serverResponse(res, 500, error.message)
+    }
+}
+
+export const getUsersForSidebar = async (req, res) => {
+    try {
+
+        const {userId} = req
+        const allUsers = await User.findAll({where: {id: {[Op.ne]: userId}}})
+
+        return dataResponse(res, 200, allUsers)
+    } catch (error) {
+        console.log('Error in getUsersForSidebar', error);
         return serverResponse(res, 500, error.message)
     }
 }

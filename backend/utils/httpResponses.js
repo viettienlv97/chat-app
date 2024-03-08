@@ -1,3 +1,10 @@
+export const unauthorizedResponse = (res, msg) => {
+    return res.status(401).json({
+        success: false,
+        msg: msg
+    })
+}
+
 export const invalidResponse = (res, status = 400, msg) => {
     return res.status(status).json({
         success: false,
