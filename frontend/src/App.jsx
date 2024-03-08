@@ -5,6 +5,14 @@ import Home from './pages/home/Home'
 import { Route, Routes } from 'react-router-dom'
 
 function App() {
+  window.addEventListener('click', function(e) {
+    document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+      if (!dropdown.contains(e.target)) {
+        // Click was outside the dropdown, close it
+        dropdown.open = false;
+      }
+    });
+  });
 
   return (
     <div className='p-4 h-screen flex items-center justify-center'>

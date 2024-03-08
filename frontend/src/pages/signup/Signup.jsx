@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import GenderDropdown from "./GenderDropdown";
 
 const Signup = () => {
   const [inputs, setInputs] = useState({
@@ -12,10 +13,27 @@ const Signup = () => {
     gender: "",
   });
 
+  const [validForm, setValidForm] = useState({
+    fullname: false,
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    gender: false,
+  });
+
+  const [isSubmit, setSubmit] = useState(false);
+
+  const handleDropdown = (gender) => {
+    setInputs({ ...inputs, gender });
+    setValidForm({...validForm, gender: true})
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(e);
-  }
+    e.preventDefault();
+    console.log(inputs);
+    setSubmit(true);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
@@ -31,26 +49,42 @@ const Signup = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Fullname</span>
+              <span className="text-base label-text font-semibold text-gray-400">
+                Fullname {
+                  isSubmit && !validForm.fullname
+                  ? (<span className="text-red-600 font-semibold underline">required</span>)
+                  : (<span className="text-red-600 font-semibold">* </span>)
+                }
+              </span>
             </label>
             <input
               type="text"
               placeholder="Enter your name"
-              className="w-full input input-bordered h-10"
+              className={`w-full input input-bordered h-10 ${isSubmit && !validForm.fullname ? 'input-error' : ''}`}
               value={inputs.fullname}
-              onChange={(e) =>
+              onChange={(e) => {
                 setInputs({ ...inputs, fullname: e.target.value })
+                setValidForm({...validForm, fullname: e.target.value ? true : false})
+              }
               }
             />
           </div>
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Username</span>
+              <span className="text-base label-text text-gray-400 font-semibold">
+                Username {
+                  isSubmit && !validForm.username
+                  ? (<span className="text-red-600 font-semibold underline">required</span>)
+                  : (<span className="text-red-600 font-semibold">*</span>)
+                }
+              </span>
             </label>
             <input
               type="text"
               placeholder="Enter username"
-              className="w-full input input-bordered h-10"
+              className={`w-full input input-bordered h-10 
+                ${isSubmit && !validForm.username ? 'input-error' : ''}`
+              }
               value={inputs.username}
               onChange={(e) =>
                 setInputs({ ...inputs, username: e.target.value })
@@ -59,24 +93,40 @@ const Signup = () => {
           </div>
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Email</span>
+              <span className="text-base label-text font-semibold text-gray-400">
+                Email {
+                  isSubmit && !validForm.email
+                  ? (<span className="text-red-600 font-semibold underline">required</span>)
+                  : (<span className="text-red-600 font-semibold">*</span>)
+                }
+              </span>
             </label>
             <input
               type="text"
               placeholder="Enter email"
-              className="w-full input input-bordered h-10"
+              className={`w-full input input-bordered h-10
+                ${isSubmit && !validForm.email ? 'input-error' : ''}
+              `}
               value={inputs.email}
               onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
             />
           </div>
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Password</span>
+              <span className="text-base label-text font-semibold text-gray-400">
+                Password {
+                  isSubmit && !validForm.password
+                  ? (<span className="text-red-600 font-semibold underline">required</span>)
+                  : (<span className="text-red-600 font-semibold">*</span>)
+                }
+              </span>
             </label>
             <input
               type="password"
               placeholder="Enter password"
-              className="w-full input input-bordered h-10"
+              className={`w-full input input-bordered h-10
+                ${isSubmit && !validForm.password ? 'input-error' : ''}
+              `}
               value={inputs.password}
               onChange={(e) =>
                 setInputs({ ...inputs, password: e.target.value })
@@ -85,31 +135,33 @@ const Signup = () => {
           </div>
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Confirm Password</span>
+              <span className="text-base label-text font-semibold text-gray-400">
+                Confirm Password {
+                  isSubmit && !validForm.confirmPassword
+                  ? (<span className="text-red-600 font-semibold underline">required</span>)
+                  : (<span className="text-red-600 font-semibold">*</span>)
+                }
+              </span>
             </label>
             <input
               type="password"
               placeholder="Confirm password"
-              className="w-full input input-bordered h-10"
+              className={`w-full input input-bordered h-10
+              ${isSubmit && !validForm.confirmPassword ? 'input-error' : ''}
+            `}
               value={inputs.confirmPassword}
               onChange={(e) =>
                 setInputs({ ...inputs, confirmPassword: e.target.value })
               }
             />
           </div>
-          <div className="flex items-center">
-            <details className="dropdown mt-2">
-              <summary className="m-1 btn">{inputs.gender || "Gender"}</summary>
-              <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                <li onClick={() => setInputs({ ...inputs, gender: "Male" })}>
-                  <a>Male</a>
-                </li>
-                <li onClick={() => setInputs({ ...inputs, gender: "Female" })}>
-                  <a>Female</a>
-                </li>
-              </ul>
-            </details>
+          <GenderDropdown
+            invalid={isSubmit && !validForm.gender}
+            selectedGender={inputs.gender}
+            onSelectDropdown={handleDropdown}
+          />
 
+          <div className="flex">
             <Link
               to="/login"
               className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block text-left ml-3"
@@ -118,7 +170,7 @@ const Signup = () => {
             </Link>
           </div>
           <div>
-            <button className="btn btn-block btn-sm mt-2 h-11 hover:text-blue-600">
+            <button className="btn btn-block btn-sm mt-3 h-11 hover:text-blue-600">
               Sign Up
             </button>
           </div>
