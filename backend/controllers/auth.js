@@ -63,11 +63,18 @@ export const signup = async (req, res) => {
             return res.status(200).json({msg: 'username or email existed'})
         
         generateTokenAndSetCookie(newId, res)
+        let userResponse = {
+            id: user.id, 
+            gender: user.gender,
+            fullname: user.fullname,
+            profilePic: user.profilePic
+        }
         
-        return res.status(200).json({success: true, data: user})
+        return res.status(200).json({success: true, data: userResponse})
     } catch (error) {
         console.log(error);
         res.status(500).json({
+            success: false,
             error: "Internal Server Error"
         })
     }
