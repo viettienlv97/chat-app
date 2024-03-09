@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import GenderDropdown from "./GenderDropdown";
+import useSignup from "../../hooks/useSignup";
 
 const Signup = () => {
   const [inputs, setInputs] = useState({
@@ -12,6 +13,8 @@ const Signup = () => {
     confirmPassword: "",
     gender: "",
   });
+
+  const {loading, signup} = useSignup()
 
   const [validForm, setValidForm] = useState({
     fullname: false,
@@ -29,10 +32,12 @@ const Signup = () => {
     setValidForm({...validForm, gender: true})
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(inputs);
     setSubmit(true);
+
+    await signup(inputs) 
   };
 
   return (
