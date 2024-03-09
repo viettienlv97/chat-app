@@ -1,6 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(username, password);
+  }
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <div
@@ -12,7 +20,7 @@ const Login = () => {
           <span className="text-blue-400"> ChatApp</span>
         </h1>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label className="label p-2">
               <span className="text-base label-text">Username</span>
@@ -21,6 +29,8 @@ const Login = () => {
               type="text"
               placeholder="Enter username"
               className="w-full input input-bordered h-10"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
             />
           </div>
           <div>
@@ -28,9 +38,11 @@ const Login = () => {
               <span className="text-base label-text">Password</span>
             </label>
             <input
-              type="text"
+              type="password"
               placeholder="Enter password"
               className="w-full input input-bordered h-10"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
           <Link
