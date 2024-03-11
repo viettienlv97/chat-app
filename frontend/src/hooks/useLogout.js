@@ -8,7 +8,6 @@ const useLogout = () => {
     const {setAuthUser} = useAuthContext()
 
     const logout = async () => {
-        console.log("logging out");
         setLoading(true)
         try {
             const res = await fetch('/api/auth/logout', {
@@ -18,7 +17,6 @@ const useLogout = () => {
 
             const data = await res.json()
 
-            console.log("data", data);
             if (!data.success) {
                 throw new Error(data)
             }
@@ -26,8 +24,6 @@ const useLogout = () => {
             localStorage.removeItem('chat-user')
             setAuthUser(null)
         } catch (error) {
-
-            console.log(error);
             toast.error(error)
         } finally {
             setLoading(false)

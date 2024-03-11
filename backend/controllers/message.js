@@ -44,7 +44,7 @@ export const sendMessage = async (req, res) => {
             }
         })
 
-        return dataResponse(res, 200, {userId, receiverId, textMessage})
+        return dataResponse(res, 200, newMessage)
     } catch (error) {
         console.log(error);
         return serverResponse(res, 500, error.message)

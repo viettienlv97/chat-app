@@ -19,15 +19,14 @@ const useSignup = () => {
                 body: JSON.stringify({fullname, username, password, confirmPassword, email, gender: gender.toLowerCase()})
             })
             const data = await res.json()
-            console.log("data", data);
 
-            if(!data.success) throw new Error(data.error)
+            if(!data.success) throw new Error(data.msg)
 
-            localStorage.setItem('chat-user', JSON.stringify(data))
+            localStorage.setItem('chat-user', JSON.stringify(data.data))
 
-            setAuthUser(data)
+            setAuthUser(data.data)
         } catch (err) {
-            toast.error(err.message)
+            toast.error(err)
         } finally {
             setLoading(false)
         }
