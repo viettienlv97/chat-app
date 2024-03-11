@@ -9,8 +9,8 @@ import morgan from 'morgan'
 import authRoutes from './routes/auth.js'
 import userRoutes from './routes/user.js'
 import messageRoutes from './routes/message.js'
+import {app, server} from './socket/socket.js'
 
-const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(morgan('tiny'))
@@ -28,7 +28,7 @@ app.use('/api/messages', messageRoutes)
 // Only run on env.dev
 sequelize.sync({ force: false }).then(() => {
     console.log(`Drop and Resync with { force: false }`);
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Running on http://localhost:${PORT}`);
     });
 });
