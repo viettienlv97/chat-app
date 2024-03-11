@@ -1,3 +1,4 @@
+import path from 'path'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -13,18 +14,20 @@ import {app, server} from './socket/socket.js'
 
 const PORT = process.env.PORT || 5000
 
+const __dirname = path.resolve()
+
 app.use(morgan('tiny'))
 app.use(express.json())
 app.use(cookieParser())
-
-app.get('/', (req, res) => {
-    res.send("Hello world!!")
-})
 
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/messages', messageRoutes)
 
+app.use(express.static(path.join(__dirname, '/frontend/dist')))
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
+})
 // Only run on env.dev
 sequelize.sync({ force: false }).then(() => {
     console.log(`Drop and Resync with { force: false }`);
