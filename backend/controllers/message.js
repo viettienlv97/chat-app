@@ -12,6 +12,8 @@ export const sendMessage = async (req, res) => {
         let {textMessage} = req.body
 
         let userIds = [userId, receiverId]
+        console.log(userIds);
+        console.log("textMessage", textMessage);
         
         let newMessage = await Message.create({
             senderId: userId,
@@ -38,12 +40,7 @@ export const sendMessage = async (req, res) => {
                     console.error('Update error', error);
                 })
             } else {
-                if (newMessage) {
-                    Conversation.create({
-                        userIds,
-                        messageIds: [newMessage.id]
-                    })
-                }
+                
             }
         })
 
@@ -69,7 +66,16 @@ export const getMessages = async (req, res) => {
             }
         })
 
-        if (!conversation) return invalidResponse(res, 400, 'Can not find conversation')
+        let userIds = [userId, receiverId]
+
+        if (!conversation) {
+            Conversation.create({
+                userIds,
+                messageIds: []
+            })
+        }
+
+        if (!conversation) return dataResponse(res, 200, [])
         
         let messages = await Message.findAll({
             where: {

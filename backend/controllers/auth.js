@@ -91,15 +91,28 @@ export const login = async (req, res) => {
         })
 
         if (!user)
-            return res.status(400).json({msg: 'user not exist'})
+            return res.status(400).json({
+                success: false,
+                msg: 'user not exist'
+            })
         
         let isPasswordCorrect = await bcryptjs.compare(password, user?.password || '')
-        if(!isPasswordCorrect) return res.status(400).json({msg: 'password incorrect'})
+        if(!isPasswordCorrect) return res.status(400).json({
+            success: false,
+            msg: 'password incorrect'
+        })
+
+        let userResponse = {
+            id: user.id, 
+            gender: user.gender,
+            fullname: user.fullname,
+            profilePic: user.profilePic
+        }
 
         generateTokenAndSetCookie(user.id, res)
         return res.status(200).json({
             success: true,
-            date: user
+            data: userResponse
         })
 
     } catch(err) {
