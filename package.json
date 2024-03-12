@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "server": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
+    "server": "NODE_ENV=production node backend/server.js",
+    "dev": "node backend/server.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "build-prod": "npm install && npm install --prefix frontend && npm run build-prod --prefix frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

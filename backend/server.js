@@ -1,6 +1,7 @@
 import path from 'path'
 import dotenv from 'dotenv'
-dotenv.config()
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
+dotenv.config({path: envFile})
 
 import express from 'express'
 import cookieParser from 'cookie-parser'
