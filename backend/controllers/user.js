@@ -43,6 +43,7 @@ export const getUsersForSidebar = async (req, res) => {
         const {userId} = req
         const allUsers = await User.findAll({where: {id: {[Op.ne]: userId}}})
 
+        if (!allUsers) return dataResponse(res, 200, [])
         return dataResponse(res, 200, allUsers)
     } catch (error) {
         console.log('Error in getUsersForSidebar', error);

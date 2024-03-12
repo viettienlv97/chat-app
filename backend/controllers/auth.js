@@ -6,6 +6,7 @@ import { Op } from 'sequelize'
 //modules
 import generateTokenAndSetCookie from '../utils/generateToken.js'
 import User from '../models/user.js'
+import FriendsList from '../models/friendsList.js'
 
 const genders = ['male', 'female']
 
@@ -59,15 +60,26 @@ export const signup = async (req, res) => {
             defaults: userData
         })
 
-        if (!created) 
+        let friendsList
+
+        if (!created) {
             return res.status(200).json({msg: 'username or email existed'})
+        } else {
+            friendsList = await FriendsList.create({
+                userId: newId,
+                friendIds: []
+            })
+        }
+
+        
         
         generateTokenAndSetCookie(newId, res)
         let userResponse = {
             id: user.id, 
             gender: user.gender,
             fullname: user.fullname,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            friendsList
         }
         
         return res.status(200).json({success: true, data: userResponse})

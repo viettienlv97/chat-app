@@ -4,9 +4,12 @@ import MessageInput from './MessageInput'
 import {TiMessages} from 'react-icons/ti'
 import useConversation from '../../zustand/useConversation'
 import { useAuthContext } from '../../context/AuthContext'
+import AddFriend from './AddFriend'
 
 const MessageContainer = () => {
   const {selectedConversation, setSelectedConversation} = useConversation()
+
+  const isFriend = false
 
   useEffect(() => {
 
@@ -19,11 +22,15 @@ const MessageContainer = () => {
       {!selectedConversation ? <NoChatSelected /> : 
         <>
           {/* Header */}
-          <div className='bg-slate-500 px-4 py-2 mb-2 flex items-center'>
+          <div className={`bg-slate-500 px-4 py-2 flex items-center select-none
+            ${isFriend ? 'mb-2' : ''}
+          `}>
               <span className='label-text mr-2'>To:</span><span className='text-gray-900 font-bold'>
                 {selectedConversation.fullname}
               </span>
           </div>
+
+          {!isFriend && <AddFriend />}
 
           <Messages />
           <MessageInput />

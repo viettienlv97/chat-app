@@ -14,8 +14,6 @@ export const SocketContextProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
-    console.log(import.meta.env.VITE_API_URL);
-    console.log(authUser);
     if (authUser) {
       const socket = io(import.meta.env.VITE_API_URL, {
         query: {
@@ -26,8 +24,6 @@ export const SocketContextProvider = ({ children }) => {
       setSocket(socket);
       socket.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
-
-        console.log(onlineUsers);
       });
 
       return () => socket.close();
