@@ -1,85 +1,85 @@
-import { DataTypes, Op } from "sequelize";
+import { DataTypes, Op } from 'sequelize'
 
-import sequelize from "../config/db.js";
-import Message from "./message.js";
+import sequelize from '../config/db.js'
+import Message from './message.js'
 
-const User = sequelize.define("User", {
+const User = sequelize.define('User', {
   id: {
     type: DataTypes.UUID,
-    primaryKey: true,
+    primaryKey: true
   },
   username: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   fullname: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   gender: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   profilePic: {
-    type: DataTypes.STRING,
-  },
-});
+    type: DataTypes.STRING
+  }
+})
 
 User.hasMany(Message, {
-  as: "sentMessage",
-  foreignKey: "senderId",
-});
+  as: 'sentMessage',
+  foreignKey: 'senderId'
+})
 User.hasMany(Message, {
-  as: "receivedMessage",
-  foreignKey: "receiverId",
-});
+  as: 'receivedMessage',
+  foreignKey: 'receiverId'
+})
 
 export const findOrCreateUser = async (userData) => {
   try {
-    if (!userData) return null;
+    if (!userData) return null
 
-    const { username, email } = userData;
+    const { username, email } = userData
 
     let [user, created] = await User.findOrCreate({
       where: {
-        [Op.or]: [{ username }, { email }],
+        [Op.or]: [{ username }, { email }]
       },
-      defaults: userData,
-    });
+      defaults: userData
+    })
 
-    if (!user) return null;
+    if (!user) return null
 
-    return { user, created };
+    return { user, created }
   } catch (error) {
-    console.log("Error in findOrCreateUser", error);
-    return null;
+    console.log('Error in findOrCreateUser', error)
+    return null
   }
-};
+}
 
 export const findUserByUserOrEmail = async (username) => {
   try {
     if (!username) return null
     const user = await User.findOne({
       where: {
-        [Op.or]: [{ username }, { email: username }],
-      },
-    });
+        [Op.or]: [{ username }, { email: username }]
+      }
+    })
 
-    if (!user) return null;
+    if (!user) return null
 
-    return user;
+    return user
   } catch (error) {
-    console.log("Error in findUserByUserOrEmail", error);
-    return null;
+    console.log('Error in findUserByUserOrEmail', error)
+    return null
   }
-};
+}
 
-export default User;
+export default User

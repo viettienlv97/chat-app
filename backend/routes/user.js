@@ -1,7 +1,11 @@
-import express from "express"
+import express from 'express'
 const router = express.Router()
-import { getUsers, getUserDetail, getUsersForSidebar } from "../controllers/user.js"
-import protectRoute from "../middleware/protectRoute.js"
+import {
+  getUsers,
+  getUserDetail,
+  getUsersForSidebar
+} from '../controllers/user.js'
+import protectRoute from '../middleware/protectRoute.js'
 //import {signup, login, logout} from '../controllers/auth.js'
 
 //router.get('/', protectRoute, getUsers)

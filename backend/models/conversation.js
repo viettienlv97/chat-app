@@ -1,16 +1,16 @@
-import { DataTypes } from "sequelize"
-import sequelize from "../config/db.js"
-import Message from "./message.js"
+import { DataTypes } from 'sequelize'
+import sequelize from '../config/db.js'
+import Message from './message.js'
 
 const Conversation = sequelize.define('Conversation', {
-    userIds: {
-        type: DataTypes.ARRAY(DataTypes.UUID),
-        allowNull: false
-    },
-    messageIds: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
-        defaultValue: []
-    }
+  userIds: {
+    type: DataTypes.ARRAY(DataTypes.UUID),
+    allowNull: false
+  },
+  messageIds: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: []
+  }
 })
 
 // const UserConversation = sequelize.define('UserConversation', {
@@ -29,7 +29,7 @@ const Conversation = sequelize.define('Conversation', {
 //       }
 //     }
 //   });
-  
+
 // const MessageConversation = sequelize.define('MessageConversation', {
 //     messageId: {
 //         type: DataTypes.UUID,

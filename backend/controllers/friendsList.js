@@ -1,2 +1,1 @@
-import FriendsList from "../models/friendsList"
-
+import FriendsList from '../models/friendsList'

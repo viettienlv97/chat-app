@@ -1,53 +1,53 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
+import { DataTypes } from 'sequelize'
+import sequelize from '../config/db.js'
 
-const FriendsList = sequelize.define("FriendsList", {
+const FriendsList = sequelize.define('FriendsList', {
   userId: {
     type: DataTypes.UUID,
-    primaryKey: true,
+    primaryKey: true
   },
   friendIds: {
     type: DataTypes.ARRAY(DataTypes.UUID),
-    defaultValue: [],
-  },
-});
+    defaultValue: []
+  }
+})
 
 export const createFriendsList = async (userId) => {
   try {
-    if (!userId) return null;
+    if (!userId) return null
 
     let friendsList = await FriendsList.create({
       userId,
-      friendIds: [],
-    });
+      friendIds: []
+    })
 
-    if (friendsList) return friendsList;
-    return null;
+    if (friendsList) return friendsList
+    return null
   } catch (error) {
-    console.log("Error in createFriendsList", error);
+    console.log('Error in createFriendsList', error)
   }
-};
+}
 
 export const updateFriendsList = async (userId, friendId) => {
   try {
-    if (!userId || !friendId) return null;
+    if (!userId || !friendId) return null
 
-    let friendsList = await FriendsList.findByPk(userId);
+    let friendsList = await FriendsList.findByPk(userId)
 
-    if (!friendsList) return null;
+    if (!friendsList) return null
 
-    let friendIds = friendsList?.friendIds;
+    let friendIds = friendsList?.friendIds
 
     let updatedFriendsList = await friendsList.update({
-      friendIds: [...friendIds, friendId],
-    });
+      friendIds: [...friendIds, friendId]
+    })
 
-    if (!updatedFriendsList) return null;
+    if (!updatedFriendsList) return null
 
-    return updatedFriendsList;
+    return updatedFriendsList
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message)
   }
-};
+}
 
-export default FriendsList;
+export default FriendsList
