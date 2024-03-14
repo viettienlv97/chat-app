@@ -30,9 +30,11 @@ app.use(express.static(path.join(__dirname, '/frontend/dist')))
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
+
+const syncForce = false
 // Only run on env.dev
-sequelize.sync({ force: false }).then(() => {
-  console.log(`Drop and Resync with { force: false }`)
+sequelize.sync({ force: syncForce }).then(() => {
+  console.log(`Drop and Resync with { force: ${syncForce ? 'true' : 'false'} }`)
   server.listen(PORT, () => {
     console.log(`Running on http://localhost:${PORT}`)
   })

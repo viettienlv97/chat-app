@@ -1,33 +1,42 @@
-import { useEffect, useState } from "react";
-import useConversation from "../zustand/useConversation";
-import toast from "react-hot-toast";
+import { useEffect, useState } from 'react'
+import useConversation from '../zustand/useConversation'
+import toast from 'react-hot-toast'
+import { useAuthContext } from '../context/AuthContext'
 
 const useGetMessages = () => {
-  const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const [loading, setLoading] = useState(false)
+  const { authUser } = useAuthContext()
+  const { messages, setMessages, selectedConversation } = useConversation()
 
   useEffect(() => {
     const getMessages = async () => {
-      setLoading(true);
+      const isSelfChat = selectedConversation.isSelfChat
+      setLoading(true)
       try {
-        let res = await fetch(`/api/messages/${selectedConversation.id}`);
-        res = await res.json();
-
-        if (!res.success) {
-          throw new Error(res.msg);
+        let res = null
+        if (isSelfChat) {
+          res = await fetch(`/api/messages/self-chat`)
+        } else {
+          res = await fetch(`/api/messages/${selectedConversation.id}`)
         }
-        setMessages(res.data);
+
+        const jsonRes = await res.json()
+
+        if (!jsonRes.success) {
+          throw new Error(jsonRes.msg)
+        }
+        setMessages(jsonRes.data)
       } catch (error) {
-        toast.error(error);
+        toast.error(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    if (selectedConversation?.id) getMessages();
-  }, [selectedConversation?.id, setMessages]);
+    if (selectedConversation?.id) getMessages()
+  }, [selectedConversation?.id, setMessages])
 
-  return { messages, loading };
-};
+  return { messages, loading }
+}
 
-export default useGetMessages;
+export default useGetMessages

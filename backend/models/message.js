@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize'
 
 import sequelize from '../config/db.js'
-import User from './user.js'
 
+// Model
 const Message = sequelize.define('Message', {
   senderId: {
     type: DataTypes.UUID,
@@ -14,7 +14,7 @@ const Message = sequelize.define('Message', {
   },
   receiverId: {
     type: DataTypes.UUID,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: 'Users',
       key: 'id'

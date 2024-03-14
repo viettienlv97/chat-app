@@ -5,11 +5,8 @@ import { Op } from 'sequelize'
 
 //modules
 import generateTokenAndSetCookie from '../utils/generateToken.js'
-import { findOrCreateUser, findUserByUserOrEmail } from '../models/user.js'
-import FriendsList, {
-  createFriendsList,
-  updateFriendsList
-} from '../models/friendsList.js'
+import { findOrCreateUser, findUserByUserOrEmail, getUserResponse } from '../models/user.js'
+import { createFriendsList, updateFriendsList } from '../models/friendsList.js'
 
 const genders = ['male', 'female']
 
@@ -46,7 +43,8 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       email,
       gender,
-      profilePic
+      profilePic,
+      isOpenSelfChat: false
     }
 
     const { user, created } = await findOrCreateUser(userData)
@@ -60,13 +58,8 @@ export const signup = async (req, res) => {
     }
 
     generateTokenAndSetCookie(newId, res)
-    let userResponse = {
-      id: user.id,
-      gender: user.gender,
-      fullname: user.fullname,
-      profilePic: user.profilePic,
-      friendsList
-    }
+
+    let userResponse = getUserResponse(user)
 
     return res.status(200).json({ success: true, data: userResponse })
   } catch (error) {
@@ -100,12 +93,7 @@ export const login = async (req, res) => {
         msg: 'password incorrect'
       })
 
-    let userResponse = {
-      id: user.id,
-      gender: user.gender,
-      fullname: user.fullname,
-      profilePic: user.profilePic
-    }
+    let userResponse = getUserResponse(user)
 
     generateTokenAndSetCookie(user.id, res)
     return res.status(200).json({

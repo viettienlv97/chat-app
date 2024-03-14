@@ -1,6 +1,11 @@
 import { Op } from 'sequelize'
 
-import Conversation from '../models/conversation.js'
+import {
+  createConversation,
+  createSelfConversation,
+  findConversation,
+  updateMessagesConversation
+} from '../models/conversation.js'
 import Message from '../models/message.js'
 import {
   dataResponse,
@@ -16,8 +21,6 @@ export const sendMessage = async (req, res) => {
     let { textMessage } = req.body
 
     let userIds = [userId, receiverId]
-    console.log(userIds)
-    console.log('textMessage', textMessage)
 
     let newMessage = await Message.create({
       senderId: userId,
@@ -25,30 +28,18 @@ export const sendMessage = async (req, res) => {
       message: textMessage
     })
 
-    Conversation.findOne({
-      where: {
-        userIds: {
-          [Op.contains]: userIds
-        }
-      }
-    }).then((conversation) => {
-      if (conversation) {
-        console.log(conversation.messageIds)
-        let updateMessageIds = [...conversation.messageIds, newMessage.id]
-        console.log(updateMessageIds)
-        conversation
-          .update({
-            messageIds: updateMessageIds
-          })
-          .then(() => {
-            console.log('Update success')
-          })
-          .catch((error) => {
-            console.error('Update error', error)
-          })
-      } else {
-      }
-    })
+    const conversation = await findConversation(userIds)
+
+    if (conversation) {
+      const updateMessageIds = [...conversation.messageIds, newMessage.id]
+
+      const updatedConv = await updateMessagesConversation(
+        conversation,
+        updateMessageIds
+      )
+      if (!updatedConv) console.error('Update error')
+      else console.log('Update success')
+    }
 
     const receiverSocketId = getReceiverSocketId(receiverId)
     if (receiverSocketId) {
@@ -68,32 +59,47 @@ export const getMessages = async (req, res) => {
     const { userId } = req
     const { id: receiverId } = req.params
 
-    let conversation = await Conversation.findOne({
-      where: {
-        userIds: {
-          [Op.contains]: [userId, receiverId]
-        }
-      }
-    })
-
     let userIds = [userId, receiverId]
 
+    let conversation = await findConversation(userIds)
+
     if (!conversation) {
-      Conversation.create({
-        userIds,
-        messageIds: []
+      await createConversation(userIds)
+
+      return dataResponse(res, 200, [])
+    } else {
+      let messages = await Message.findAll({
+        where: {
+          id: { [Op.in]: conversation.messageIds }
+        }
       })
+
+      return dataResponse(res, 200, messages)
     }
+  } catch (error) {
+    console.log(error)
+    return serverResponse(res, 500, error.message)
+  }
+}
 
-    if (!conversation) return dataResponse(res, 200, [])
+export const getSelfChatMessages = async (req, res) => {
+  try {
+    const { userId } = req
+    const userIds = [userId]
+    let conversation = await findConversation(userIds)
 
-    let messages = await Message.findAll({
-      where: {
-        id: { [Op.in]: conversation.messageIds }
-      }
-    })
+    if (!conversation) {
+      await createSelfConversation(userIds)
+      return dataResponse(res, 200, [])
+    } else {
+      let messages = await Message.findAll({
+        where: {
+          id: { [Op.in]: conversation.messageIds }
+        }
+      })
 
-    return dataResponse(res, 200, messages)
+      return dataResponse(res, 200, messages)
+    }
   } catch (error) {
     console.log(error)
     return serverResponse(res, 500, error.message)

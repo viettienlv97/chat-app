@@ -30,6 +30,9 @@ const User = sequelize.define('User', {
   },
   profilePic: {
     type: DataTypes.STRING
+  },
+  isOpenSelfChat: {
+    type: DataTypes.BOOLEAN
   }
 })
 
@@ -42,6 +45,10 @@ User.hasMany(Message, {
   foreignKey: 'receiverId'
 })
 
+// Create
+// TODO
+
+// Read
 export const findOrCreateUser = async (userData) => {
   try {
     if (!userData) return null
@@ -79,6 +86,36 @@ export const findUserByUserOrEmail = async (username) => {
   } catch (error) {
     console.log('Error in findUserByUserOrEmail', error)
     return null
+  }
+}
+
+// Update
+export const updateSelfChat = async (userId, isOpenSelfChat = false) => {
+  try {
+    if (!userId) return null
+
+    const user = await User.findByPk(userId)
+
+    if (!user) return null
+
+    const updatedUser = await user.update({ isOpenSelfChat })
+
+    return updatedUser
+  } catch (error) {
+    console.log('Error in updateSelfChat', error)
+    return null
+  }
+}
+//utils
+export const getUserResponse = (user) => {
+  if (!user) return null
+
+  return {
+    id: user.id,
+    gender: user.gender,
+    fullname: user.fullname,
+    profilePic: user.profilePic,
+    isOpenSelfChat: user.isOpenSelfChat
   }
 }
 

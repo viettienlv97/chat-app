@@ -3,10 +3,12 @@ import Conversation from './Conversation'
 import useGetConversations from '../../hooks/useGetConversations'
 import { getRandomEmoji } from '../../utils/emojis'
 import { useSocketContext } from '../../context/SocketContext'
+import { useConversationContext } from '../../context/ConversationContext'
 
 const Conversations = () => {
-  const {loading, conversations, getConversations} = useGetConversations()
-  const {onlineUsers} = useSocketContext()
+  const { loading, getConversations } = useGetConversations()
+  const { conversations } = useConversationContext()
+  const { onlineUsers } = useSocketContext()
 
   useEffect(() => {
     getConversations()
@@ -15,18 +17,19 @@ const Conversations = () => {
   }, [onlineUsers])
 
   return (
-    <div className='py-2 flex flex-col overflow-auto'>
-        {conversations.map((conversation, idx) => (
-          <Conversation
-            key={conversation.id}
-            conversation={conversation}
-            emoji={getRandomEmoji()}
-            lastIndex={idx === (conversations.length - 1)}
-          />
-        ))}
+    <div className="py-2 flex flex-col overflow-auto">
+      {conversations.map((conversation, idx) => (
+        <Conversation
+          key={conversation.id}
+          conversation={conversation}
+          emoji={getRandomEmoji()}
+          lastIndex={idx === conversations.length - 1}
+        />
+      ))}
 
-        {loading ? <span className='loading loading-spinner mx-auto'></span> : null}
-
+      {loading ? (
+        <span className="loading loading-spinner mx-auto"></span>
+      ) : null}
     </div>
   )
 }
