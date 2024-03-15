@@ -47,10 +47,10 @@ const useGetConversations = () => {
     }
   }
 
-  useEffect(() => {
-    //getSelfChat()
-    getConversations()
-  }, [])
+  // useEffect(() => {
+  //   //getSelfChat()
+  //   //getConversations()
+  // }, [])
 
   return { loading, getConversations }
 }

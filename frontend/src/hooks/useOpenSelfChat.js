@@ -1,11 +1,8 @@
 import { useState } from "react"
 import toast from "react-hot-toast"
-import useGetConversations from "./useGetConversations"
-
 
 const useOpenSelfChat = () => {
   const [loading, setLoading] = useState(false)
-  //const {setConversations} = useGetConversations()
 
   const openSelfChat = async (isOpenSelfChat) => {
     setLoading(true)
@@ -16,12 +13,10 @@ const useOpenSelfChat = () => {
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({isOpenSelfChat: true})
         })
+
+        const jsonRes = await res.json()
+        if (!jsonRes.success) {throw new Error(jsonRes.msg)}
       }
-
-      const jsonRes = await res.json()
-      if (!jsonRes.success) {throw new Error(jsonRes.msg)}
-
-      
     } catch (error) {
       toast.error(error)
     } finally {
