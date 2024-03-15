@@ -15,7 +15,7 @@ export const invalidResponse = (res, status = 400, msg) => {
 export const serverResponse = (res, status = 500, msg) => {
   return res.status(status).json({
     success: false,
-    msg: msg
+    msg: msg || 'Internal Server Error'
   })
 }
 

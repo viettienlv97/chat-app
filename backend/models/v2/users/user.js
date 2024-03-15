@@ -39,6 +39,18 @@ const User = sequelize.define('Users', {
   }
 })
 
-User.hasMany()
+
+//utils
+export const getUserResponse = (user) => {
+  if (!user) return null
+
+  return {
+    id: user.id,
+    gender: user.gender,
+    fullname: user.fullname,
+    profilePic: user.profilePic,
+    isOpenSelfChat: user.isOpenSelfChat
+  }
+}
 
 export default User

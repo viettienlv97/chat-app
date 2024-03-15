@@ -6,7 +6,7 @@ dotenv.config({ path: envFile })
 
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import sequelize from './config/db.js'
+import sequelize from './config//v2/db.js'
 
 import morgan from 'morgan'
 import authRoutes from './routes/auth.js'
@@ -32,12 +32,15 @@ app.get('*', (req, res) => {
 })
 
 const syncForce = false
-// Only run on env.dev
-sequelize.sync({ force: syncForce }).then(() => {
+
+sequelize.sync({force: syncForce}).then(() => {
   console.log(`Drop and Resync with { force: ${syncForce ? 'true' : 'false'} }`)
-  server.listen(PORT, () => {
-    console.log(`Running on http://localhost:${PORT}`)
-  })
+    server.listen(PORT, () => {
+      console.log(`Running on http://localhost:${PORT}`)
+    })
 })
+
+// Only run on env.dev
+
 
 //app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))

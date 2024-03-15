@@ -5,7 +5,7 @@ dotenv.config()
 const sequelize =
   process.env.NODE_ENV === 'development'
     ? new Sequelize(
-        process.env.DB,
+        process.env.DB_V2,
         process.env.DB_USERNAME,
         process.env.DB_PASSWORD,
         {
