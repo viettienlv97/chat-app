@@ -1,7 +1,8 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../../../config/db.js'
-import ConversationParticipant from './conversationParticipant.js'
+//import ConversationParticipant from './conversationParticipant.js'
 import Message from './message.js'
+import User from '../users/user.js'
 
 const Conversation = sequelize.define('Conversations', {
   id: {
@@ -14,7 +15,7 @@ const Conversation = sequelize.define('Conversations', {
   }
 })
 
-const ConversationParticipant = sequelize.define(
+export const ConversationParticipant = sequelize.define(
   'ConversationParticipants',
   {
     userId: {
@@ -45,14 +46,18 @@ const ConversationParticipant = sequelize.define(
   }
 )
 
-Conversation.hasMany(ConversationParticipant, {
-  foreignKey: 'conversationId',
-  as: 'conversationParticipants'
-})
+// Conversation.hasMany(ConversationParticipant, {
+//   foreignKey: 'conversationId',
+//   as: 'conversationParticipants'
+// })
 
 Conversation.hasMany(Message, {
   foreignKey: 'conversationId',
   as: 'messages'
+})
+
+Conversation.belongsToMany(User, {
+  through: ConversationParticipant
 })
 
 export default Conversation

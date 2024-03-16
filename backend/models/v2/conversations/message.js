@@ -34,4 +34,12 @@ Message.belongsTo(User, {
   as: 'users'
 })
 
+const createSendMessage = async ({authorId, conversationId, content}) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 export default Message

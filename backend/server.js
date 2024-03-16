@@ -6,7 +6,7 @@ dotenv.config({ path: envFile })
 
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import sequelize from './config//v2/db.js'
+import sequelize from './config/v2/db.js'
 
 import morgan from 'morgan'
 import authRoutes from './routes/auth.js'
@@ -31,7 +31,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
 
-const syncForce = false
+const syncForce = true
 
 sequelize.sync({force: syncForce}).then(() => {
   console.log(`Drop and Resync with { force: ${syncForce ? 'true' : 'false'} }`)

@@ -4,13 +4,13 @@ import { v4 as uuid } from 'uuid'
 import { Op } from 'sequelize'
 
 //modules
-import generateTokenAndSetCookie from '../../utils/generateToken'
-import User, { getUserResponse } from '../../models/v2/users/user.js'
+import generateTokenAndSetCookie from '../../../utils/generateToken.js'
+import User, { getUserResponse } from '../../../models/v2/users/user.js'
 import {
   invalidResponse,
   dataResponse,
   serverResponse
-} from '../../utils/httpResponses'
+} from '../../../utils/httpResponses.js'
 
 const genders = ['male', 'female']
 

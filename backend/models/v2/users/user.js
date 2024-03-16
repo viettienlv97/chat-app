@@ -1,6 +1,11 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Op } from 'sequelize'
 
-import sequelize from '../../../config/db'
+import sequelize from '../../../config/db.js'
+import FriendShip from './friendShips.js'
+import Message from '../conversations/message.js'
+import Conversation, {
+  ConversationParticipant
+} from '../conversations/conversation.js'
 
 const User = sequelize.define('Users', {
   id: {
@@ -39,6 +44,46 @@ const User = sequelize.define('Users', {
   }
 })
 
+// FriendShip
+User.hasMany(FriendShip, {
+  foreignKey: 'senderId'
+})
+User.hasMany(FriendShip, {
+  foreignKey: 'receiverId'
+})
+
+// Conversation
+User.hasMany(Message, {
+  foreignKey: 'authorId',
+  as: 'messages'
+})
+
+User.belongsToMany(Conversation, {
+  through: ConversationParticipant
+})
+
+export const findOrCreateUser = async (userData) => {
+  try {
+    if (!userData) return null
+
+    const { username, email } = userData
+    if (!username || !email) return null
+
+    const [user, created] = await User.findOrCreate({
+      where: {
+        [Op.or]: [{ username }, { email }]
+      },
+      defaults: userData
+    })
+
+    if (!user) return null
+
+    return { user, created }
+  } catch (error) {
+    console.log('Error at findOrCreateUser', error)
+    return null
+  }
+}
 
 //utils
 export const getUserResponse = (user) => {
