@@ -4,12 +4,12 @@
 import { Op } from 'sequelize'
 
 //modules
-import User, { updateSelfChat } from '../models/user.js'
+import User, { updateSelfChat } from '../../models/v1/user.js'
 import {
   dataResponse,
   serverResponse,
   invalidResponse
-} from '../utils/httpResponses.js'
+} from '../../utils/httpResponses.js'
 
 //const genders = ['male', 'female']
 

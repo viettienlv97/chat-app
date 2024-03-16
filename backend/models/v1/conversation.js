@@ -1,5 +1,5 @@
 import { DataTypes, Op } from 'sequelize'
-import sequelize from '../config/db.js'
+//import sequelize from '../../config/db.js'
 
 // Model
 const Conversation = sequelize.define('Conversation', {

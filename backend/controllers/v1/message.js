@@ -5,14 +5,14 @@ import {
   createSelfConversation,
   findConversation,
   updateMessagesConversation
-} from '../models/conversation.js'
-import Message from '../models/message.js'
+} from '../../models/v1/conversation.js'
+import Message from '../../models/v1/message.js'
 import {
   dataResponse,
   serverResponse,
   invalidResponse
-} from '../utils/httpResponses.js'
-import { getReceiverSocketId, io } from '../socket/socket.js'
+} from '../../utils/httpResponses.js'
+import { getReceiverSocketId, io } from '../../socket/socket.js'
 
 export const sendMessage = async (req, res) => {
   try {

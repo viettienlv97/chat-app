@@ -4,9 +4,9 @@ import { v4 as uuid } from 'uuid'
 import { Op } from 'sequelize'
 
 //modules
-import generateTokenAndSetCookie from '../utils/generateToken.js'
-import { findOrCreateUser, findUserByUserOrEmail, getUserResponse } from '../models/user.js'
-import { createFriendsList, updateFriendsList } from '../models/friendsList.js'
+import generateTokenAndSetCookie from '../../utils/generateToken.js'
+import { findOrCreateUser, findUserByUserOrEmail, getUserResponse } from '../../models/v1/user.js'
+import { createFriendsList, updateFriendsList } from '../../models/v1/friendsList.js'
 
 const genders = ['male', 'female']
 

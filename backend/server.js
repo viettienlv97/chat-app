@@ -6,7 +6,7 @@ dotenv.config({ path: envFile })
 
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import sequelize from './config/v2/db.js'
+import sequelize from './config/db.js'
 
 import morgan from 'morgan'
 import authRoutes from './routes/auth.js'
