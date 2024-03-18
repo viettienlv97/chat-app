@@ -7,7 +7,7 @@ import Conversation, {
   ConversationParticipant
 } from '../conversations/conversation.js'
 
-const User = sequelize.define('Users', {
+const User = sequelize.define('User', {
   id: {
     type: DataTypes.UUID,
     allowNull: false,
@@ -32,7 +32,7 @@ const User = sequelize.define('Users', {
     allowNull: false
   },
   gender: {
-    type: DataTypes.CHAR(6),
+    type: DataTypes.STRING(6),
     allowNull: false
   },
   profilePic: {
@@ -42,48 +42,32 @@ const User = sequelize.define('Users', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   }
+}, {
+  tableName: 'Users'
 })
 
-// FriendShip
-User.hasMany(FriendShip, {
-  foreignKey: 'senderId'
-})
-User.hasMany(FriendShip, {
-  foreignKey: 'receiverId'
-})
+// export const findOrCreateUser = async (userData) => {
+//   try {
+//     if (!userData) return null
 
-// Conversation
-User.hasMany(Message, {
-  foreignKey: 'authorId',
-  as: 'messages'
-})
+//     const { username, email } = userData
+//     if (!username || !email) return null
 
-User.belongsToMany(Conversation, {
-  through: ConversationParticipant
-})
+//     const [user, created] = await User.findOrCreate({
+//       where: {
+//         [Op.or]: [{ username }, { email }]
+//       },
+//       defaults: userData
+//     })
 
-export const findOrCreateUser = async (userData) => {
-  try {
-    if (!userData) return null
+//     if (!user) return null
 
-    const { username, email } = userData
-    if (!username || !email) return null
-
-    const [user, created] = await User.findOrCreate({
-      where: {
-        [Op.or]: [{ username }, { email }]
-      },
-      defaults: userData
-    })
-
-    if (!user) return null
-
-    return { user, created }
-  } catch (error) {
-    console.log('Error at findOrCreateUser', error)
-    return null
-  }
-}
+//     return { user, created }
+//   } catch (error) {
+//     console.log('Error at findOrCreateUser', error)
+//     return null
+//   }
+// }
 
 //utils
 export const getUserResponse = (user) => {

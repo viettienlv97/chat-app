@@ -1,24 +1,27 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../../../config/db.js'
-//import ConversationParticipant from './conversationParticipant.js'
-import Message from './message.js'
-import User from '../users/user.js'
 
-const Conversation = sequelize.define('Conversations', {
-  id: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    primaryKey: true
+const Conversation = sequelize.define(
+  'Conversation',
+  {
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING
+    }
   },
-  name: {
-    type: DataTypes.STRING(255),
+  {
+    tableName: 'Conversations'
   }
-})
+)
 
 export const ConversationParticipant = sequelize.define(
-  'ConversationParticipants',
+  'ConversationParticipant',
   {
-    userId: {
+    UserId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -26,7 +29,7 @@ export const ConversationParticipant = sequelize.define(
         key: 'id'
       }
     },
-    conversationId: {
+    ConversationId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -36,11 +39,12 @@ export const ConversationParticipant = sequelize.define(
     }
   },
   {
+    tableName: 'ConversationParticipants',
     indexes: [
       {
         unique: true,
         primaryKey: true,
-        fields: ['userId', 'conversationId']
+        fields: ['UserId', 'ConversationId']
       }
     ]
   }
@@ -51,13 +55,13 @@ export const ConversationParticipant = sequelize.define(
 //   as: 'conversationParticipants'
 // })
 
-Conversation.hasMany(Message, {
-  foreignKey: 'conversationId',
-  as: 'messages'
-})
+// Conversation.hasMany(Message, {
+//   foreignKey: 'conversationId',
+//   as: 'messages'
+// })
 
-Conversation.belongsToMany(User, {
-  through: ConversationParticipant
-})
+// Conversation.belongsToMany(User, {
+//   through: ConversationParticipant
+// })
 
 export default Conversation

@@ -6,7 +6,7 @@ import {
   getMessages,
   getSelfChatMessages
 } from '../controllers/message.js'
-import protectRoute from '../middleware/protectRoute.js'
+import protectRoute from '../../middleware/protectRoute.js'
 
 router.get('/:id', protectRoute, getMessages)
 router.get('/self-chat', protectRoute, getSelfChatMessages)

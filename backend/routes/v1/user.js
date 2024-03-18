@@ -6,7 +6,7 @@ import {
   getUsersForSidebar,
   updateUserSelfChat
 } from '../controllers/user.js'
-import protectRoute from '../middleware/protectRoute.js'
+import protectRoute from '../../middleware/protectRoute.js'
 //import {signup, login, logout} from '../controllers/auth.js'
 
 //router.get('/', protectRoute, getUsers)

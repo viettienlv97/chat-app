@@ -4,7 +4,7 @@ import {
   unauthorizedResponse,
   invalidResponse
 } from '../utils/httpResponses.js'
-import User from '../models/user.js'
+import {User} from '../models/v2/index.js'
 
 const protectRoute = async (req, res, next) => {
   try {
@@ -18,7 +18,7 @@ const protectRoute = async (req, res, next) => {
     if (!decoded)
       return unauthorizedResponse(res, 'Unauthorized - Invalid token')
 
-    const user = await User.findOne({ where: { id: decoded.userId } })
+    const user = await User.findByPk(decoded.userId)
     if (!user) return invalidResponse(res, 400, 'User not found')
 
     req.userId = decoded.userId

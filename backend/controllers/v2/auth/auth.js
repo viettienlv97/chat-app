@@ -5,7 +5,7 @@ import { Op } from 'sequelize'
 
 //modules
 import generateTokenAndSetCookie from '../../../utils/generateToken.js'
-import User, { getUserResponse } from '../../../models/v2/users/user.js'
+import { User } from '../../../models/v2/index.js'
 import {
   invalidResponse,
   dataResponse,
@@ -45,12 +45,16 @@ export const signup = async (req, res) => {
       profilePic
     }
 
-    const { user, created } = await User.findOrCreate({
+    const [findUser, created] = await User.findOrCreate({
+      attributes: ['id', 'fullname', 'gender', 'profilePic', 'isOpenSelfChat'],
       where: {
-        [Op.or]: [{ username }, { email }]
+        [Op.or]: [{ username: username }, { email: username }]
       },
       defaults: userData
     })
+
+    console.log('findUser', findUser)
+    console.log('created', created)
 
     if (!created) {
       return invalidResponse(res, 400, 'Username or Email existed')
@@ -58,7 +62,7 @@ export const signup = async (req, res) => {
 
     generateTokenAndSetCookie(newId, res)
 
-    return dataResponse(res, 200, getUserResponse(user))
+    return dataResponse(res, 200, findUser)
   } catch (error) {
     console.log(error)
     serverResponse(res, 500)
@@ -70,6 +74,7 @@ export const login = async (req, res) => {
     const { username, password } = req.body
 
     const user = await User.findOne({
+      attributes: ['id', 'fullname', 'gender', 'profilePic', 'isOpenSelfChat'],
       where: {
         [Op.or]: [{ username }, { email: username }]
       }
@@ -77,24 +82,33 @@ export const login = async (req, res) => {
 
     if (!user) return invalidResponse(res, 400, 'User not exist')
 
-    const isPasswordCorrect = await bcryptjs.compare(
-      password, user?.password || ''
-    )
-    if (!isPasswordCorrect) return invalidResponse(res, 400, 'Password incorrect')
+    const userP = await User.findOne({
+      attributes: ['password'],
+      where: {
+        [Op.or]: [{ username }, { email: username }]
+      }
+    })
 
-    return dataResponse(res, 200, getUserResponse(user))
+    const isPasswordCorrect = await bcryptjs.compare(
+      password,
+      userP?.password || ''
+    )
+    if (!isPasswordCorrect)
+      return invalidResponse(res, 400, 'Password incorrect')
+
+    generateTokenAndSetCookie(user.id, res)
+    return dataResponse(res, 200, user)
   } catch (error) {
-    console.log("Error", error);
+    console.log('Error', error)
     return serverResponse(res, 500)
   }
 }
 
 export const logout = async (req, res) => {
   try {
-    res.cookie('jwt', '', {maxAge: 0})
+    res.cookie('jwt', '', { maxAge: 0 })
     return dataResponse(res, 200, 'Logged out Successfully')
   } catch (error) {
     return serverResponse(res, 500)
-    
   }
 }

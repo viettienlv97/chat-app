@@ -7,6 +7,7 @@ const MenuDropdown = () => {
 
   const handleOpenSelfChat = async () => {
     if (authUser && !authUser.isOpenSelfChat) {
+      console.log('open self chat')
       await openSelfChat()
     }
   }

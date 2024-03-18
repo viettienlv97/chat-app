@@ -13,18 +13,18 @@ const useSignup = () => {
 
         setLoading(true)
         try {
-            const res = await fetch(`/api/auth/signup`, {
+            const res = await fetch(`/api/v2/auth/signup`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({fullname, username, password, confirmPassword, email, gender: gender.toLowerCase()})
             })
-            const data = await res.json()
+            const jsonRes = await res.json()
 
-            if(!data.success) throw new Error(data.msg)
+            if(!jsonRes.success) throw new Error(jsonRes.msg)
 
-            localStorage.setItem('chat-user', JSON.stringify(data.data))
+            localStorage.setItem('chat-user', JSON.stringify(jsonRes.data))
 
-            setAuthUser(data.data)
+            setAuthUser(jsonRes.data)
         } catch (err) {
             toast.error(err)
         } finally {

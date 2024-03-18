@@ -8,7 +8,6 @@ import { SocketContextProvider } from "./context/SocketContext.jsx";
 import { ConversationContextProvider } from './context/ConversationContext.jsx'
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
         <SocketContextProvider>
@@ -18,5 +17,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </SocketContextProvider>
       </AuthContextProvider>
     </BrowserRouter>
-  </React.StrictMode>
 );
