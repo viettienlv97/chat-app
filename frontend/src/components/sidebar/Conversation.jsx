@@ -3,8 +3,7 @@ import useConversation from '../../zustand/useConversation'
 import { useSocketContext } from '../../context/SocketContext'
 
 const Conversation = ({ conversation, lastIndex }) => {
-  const { selectedConversation, setSelectedConversation, setFriendsList } =
-    useConversation()
+  const { selectedConversation, setSelectedConversation } = useConversation()
 
   const isSelected = selectedConversation?.id === conversation.id
   const { onlineUsers } = useSocketContext()
@@ -17,13 +16,19 @@ const Conversation = ({ conversation, lastIndex }) => {
             ${isSelected ? 'bg-sky-500' : ''}
         `}
         onClick={() => {
-          //setSelectedConversation(conversation)
-          setFriendsList([])
+          setSelectedConversation(conversation)
         }}
       >
         <div className={`avatar ${isOnline && 'online'}`}>
           <div className="w-12 rounded-full">
-            <img src={!conversation.isSelfChat ? conversation.partner?.profilePic : './save.png'} alt="user avatar" />
+            <img
+              src={
+                !conversation.isSelfChat
+                  ? conversation.partner?.profilePic
+                  : './save.png'
+              }
+              alt="user avatar"
+            />
           </div>
         </div>
         <div className="flex flex-col flex-1 ">

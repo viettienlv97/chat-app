@@ -1,20 +1,33 @@
+import { useRef } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
 import useOpenSelfChat from '../../hooks/useOpenSelfChat'
+import { useConversationContext } from '../../context/ConversationContext'
+import useConversation from '../../zustand/useConversation'
 
 const MenuDropdown = () => {
+  const detail = useRef()
   const { authUser } = useAuthContext()
   const { loading, openSelfChat } = useOpenSelfChat()
+  const { conversations } = useConversationContext()
+  const {setSelectedConversation} = useConversation()
 
   const handleOpenSelfChat = async () => {
     if (authUser && !authUser.isOpenSelfChat) {
-      console.log('open self chat')
       await openSelfChat()
+    } else {
+      const selfChatConversation = conversations.find(c => c.isSelfChat)
+      if (selfChatConversation) setSelectedConversation(selfChatConversation)
     }
+    closeDropdown()
+  }
+
+  const closeDropdown = () => {
+    detail.current.open = false
   }
 
   return (
     <div>
-      <details className="dropdown w-full">
+      <details className="dropdown w-full" ref={detail}>
         <summary
           className={`btn w-full bg-transparent border-none pb-4 text-3xl`}
         >
@@ -25,10 +38,10 @@ const MenuDropdown = () => {
             <a onClick={handleOpenSelfChat}>Saved Messages</a>
           </li>
           <li>
-            <a>Contact</a>
+            <a onClick={closeDropdown}>Contact</a>
           </li>
           <li>
-            <a>Setting</a>
+            <a onClick={closeDropdown}>Setting</a>
           </li>
           {/* <li>
             <a>Dark Mode</a>

@@ -22,19 +22,21 @@ FriendShip.belongsTo(User, {
 
 // Conversation
 User.hasMany(Message, {
-  foreignKey: 'authorId',
+  foreignKey: 'AuthorId',
   as: 'messages'
 })
 
 Message.belongsTo(User, {
-  as: 'User'
+  as: 'User',
+  foreignKey: 'AuthorId'
 })
 
 Message.belongsTo(Conversation, {
-  as: 'Conversation'
+  as: 'Conversation',
+  foreignKey: 'ConversationId'
 })
 Conversation.hasMany(Message, {
-  foreignKey: 'conversationId',
+  foreignKey: 'ConversationId',
   as: 'messages'
 })
 

@@ -1,4 +1,5 @@
-import { Op } from 'sequelize'
+import Sequelize, { Op } from 'sequelize'
+import sequelize from '../../../config/db.js'
 
 import {
   dataResponse,
@@ -33,33 +34,37 @@ export const getConversations = async (req, res) => {
     const { userId } = req
 
     const participants = await ConversationParticipant.findAll({
-      where: {UserId: userId},
+      where: { UserId: userId },
       attributes: ['ConversationId']
     })
 
-    const conversationIds = participants.map(cp => cp.ConversationId)
+    const conversationIds = participants.map((cp) => cp.ConversationId)
     const conversations = await Conversation.findAll({
-      where: {id: {[Op.in]: conversationIds}},
+      where: { id: { [Op.in]: conversationIds } },
       attributes: ['id', 'name'],
-      include: [{
-        model: User,
-        through: {
-          attributes: [],
-          where: {ConversationId: {[Op.in]: conversationIds}}
-        },
-        attributes: ['id', 'fullname', 'username', 'profilePic']
-      }]
+      include: [
+        {
+          model: User,
+          through: {
+            attributes: [],
+            where: { ConversationId: { [Op.in]: conversationIds } }
+          },
+          attributes: ['id', 'fullname', 'username', 'profilePic']
+        }
+      ]
     })
-    const dataConversations = conversations.map(c => {
+    const dataConversations = conversations.map((c) => {
       return {
         id: c.id,
         name: c.name,
         isSelfChat: c.name === 'Self Chat' ? true : false,
-        partner: c.name !== 'Self Chat' ? c.Users.find(user => user.id !== userId) : null
+        partner:
+          c.name !== 'Self Chat'
+            ? c.Users.find((user) => user.id !== userId)
+            : null
       }
     })
 
-    console.log(conversations)
     return dataResponse(res, 200, dataConversations)
   } catch (error) {
     console.log('Error in getConversations', error)
@@ -129,31 +134,72 @@ const createFriendConversation = async (req, res) => {
     const { userId } = req
     const { friendId } = req.body
     const newId = uuid()
+    const userIds = [userId, friendId]
 
-    console.log('newId', newId)
+    const ConversationId = await findFriendConversation(userIds)
 
-    const conversation = await Conversation.create({
-      id: newId,
-      name: 'Friend Chat'
-    })
-    if (!conversation) throw new Error('Cannot create conversation')
+    let conversation = null
+    let created = null
+    if (ConversationId) {
+      conversation = await Conversation.findByPk(ConversationId)
+      created = false
+    } else {
+      created = true
+      conversation = await Conversation.create({
+        id: newId,
+        name: 'Friend Chat'
+      })
 
-    const conversationParticipant = await ConversationParticipant.bulkCreate([
-      {
-        ConversationId: newId,
-        UserId: userId
-      },
-      {
-        ConversationId: newId,
-        UserId: friendId
-      }
-    ])
-    if (!conversationParticipant)
-      throw new Error('Cannot create conversationParticipant')
+      await ConversationParticipant.bulkCreate([
+        {
+          ConversationId: newId,
+          UserId: userId
+        },
+        {
+          ConversationId: newId,
+          UserId: friendId
+        }
+      ])
+    }
 
-    return dataResponse(res, 200, conversation)
+    return dataResponse(res, 200, { conversation, created })
   } catch (error) {
     console.log('Error in createFriendConversation', error)
     return serverResponse(res, 500)
+  }
+}
+
+const findFriendConversation = async (userIds) => {
+  try {
+    if (!userIds || userIds.length < 2) return null
+
+    const [results, metadata] = await sequelize.query(
+      `
+      select "ConversationId"
+      from "ConversationParticipants"
+      where "UserId" in (:user1Uuid, :user2Uuid)
+      group by "ConversationId"
+      having count(distinct "UserId") = 2
+      and count("UserId") = (
+        select count(*)
+        from "ConversationParticipants" as cp
+        where cp."ConversationId" = "ConversationParticipants"."ConversationId"
+      )
+    `,
+      {
+        replacements: { user1Uuid: userIds[0], user2Uuid: userIds[1] },
+        type: Sequelize.QueryTypes.SELECT
+      }
+    )
+
+    if (results) {
+      const ConversationId = results.ConversationId
+      return ConversationId
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.log('Error in findFriendConversation', error)
+    return null
   }
 }

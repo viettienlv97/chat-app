@@ -9,6 +9,7 @@ import AddFriend from './AddFriend'
 const MessageContainer = () => {
   const {selectedConversation, setSelectedConversation} = useConversation()
 
+  const isSelfChat = selectedConversation?.isSelfChat
   const isFriend = false
 
   useEffect(() => {
@@ -26,11 +27,11 @@ const MessageContainer = () => {
             ${isFriend ? 'mb-2' : ''}
           `}>
               <span className='label-text mr-2'>To:</span><span className='text-gray-900 font-bold'>
-                {selectedConversation.fullname}
+                {!isSelfChat ? selectedConversation.partner?.fullname : 'Self Chat'}
               </span>
           </div>
 
-          {!isFriend && <AddFriend />}
+          {!isSelfChat && !isFriend && <AddFriend />}
 
           <Messages />
           <MessageInput />

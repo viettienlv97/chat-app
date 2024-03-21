@@ -12,8 +12,8 @@ import morgan from 'morgan'
 import authRoutes from './routes/v2/auth.js'
 import conversationRoutes from './routes/v2/conversation.js'
 import userRoutes from './routes/v2/user.js'
-//import userRoutes from './routes/user.js'
-//import messageRoutes from './routes/message.js'
+import messageRoutes from './routes/v2/message.js'
+
 import { app, server } from './socket/socket.js'
 
 const PORT = process.env.PORT || 5000
@@ -27,6 +27,7 @@ app.use(cookieParser())
 app.use('/api/v2/auth', authRoutes)
 app.use('/api/v2/conversations', conversationRoutes)
 app.use('/api/v2/users', userRoutes)
+app.use('/api/v2/messages', messageRoutes)
 
 //app.use('/api/users', userRoutes)
 //app.use('/api/messages', messageRoutes)
@@ -36,7 +37,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
 
-const syncForce = true
+const syncForce = false
 
 sequelize.sync({force: syncForce}).then(() => {
   console.log(`Drop and Resync with { force: ${syncForce ? 'true' : 'false'} }`)

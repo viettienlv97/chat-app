@@ -1,30 +1,27 @@
 import { useEffect, useState } from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
-import { useAuthContext } from '../context/AuthContext'
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false)
-  const { authUser } = useAuthContext()
   const { messages, setMessages, selectedConversation } = useConversation()
 
   useEffect(() => {
     const getMessages = async () => {
-      const isSelfChat = selectedConversation.isSelfChat
       setLoading(true)
+      const conversationId = selectedConversation.id
       try {
         let res = null
-        if (isSelfChat) {
-          res = await fetch(`/api/messages/self-chat`)
-        } else {
-          res = await fetch(`/api/messages/${selectedConversation.id}`)
-        }
-
-        const jsonRes = await res.json()
-
+        res = await fetch(`/api/v2/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conversationId })
+        })
+        const jsonRes = await res?.json()
         if (!jsonRes.success) {
-          throw new Error(jsonRes.msg)
+          throw new Error(jsonRes)
         }
+
         setMessages(jsonRes.data)
       } catch (error) {
         toast.error(error)

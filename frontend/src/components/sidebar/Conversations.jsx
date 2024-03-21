@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import Conversation from './Conversation'
+import FriendSearch from './FriendSearch'
 import { getRandomEmoji } from '../../utils/emojis'
 import { useSocketContext } from '../../context/SocketContext'
 import { useConversationContext } from '../../context/ConversationContext'
@@ -17,6 +18,7 @@ const Conversations = () => {
   useEffect(() => {
     console.log('Re-render')
     console.log('conversations', conversations)
+    console.log(authUser);
     console.log('authUser.selfchat', authUser?.isOpenSelfChat || null)
     return () => {}
   }, [friendsList, onlineUsers])
@@ -24,7 +26,7 @@ const Conversations = () => {
   useEffect(() => {
     getConversations()
     // return () => {}
-  }, [authUser?.isOpenSelfChat])
+  }, [authUser?.isOpenSelfChat, friendsList])
 
   return (
     <div className="py-2 flex flex-col overflow-auto">
@@ -32,9 +34,9 @@ const Conversations = () => {
         <h1 className=" font-bold pl-2 self-start">Search</h1>
       ) : null}
       {friendsList.map((friend, idx) => (
-        <Conversation
+        <FriendSearch
           key={friend.id}
-          conversation={friend}
+          friend={friend}
           lastIndex={idx === friendsList.length - 1}
         />
       ))}

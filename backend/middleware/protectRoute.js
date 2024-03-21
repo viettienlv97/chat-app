@@ -19,7 +19,7 @@ const protectRoute = async (req, res, next) => {
       return unauthorizedResponse(res, 'Unauthorized - Invalid token')
 
     const user = await User.findByPk(decoded.userId)
-    if (!user) return invalidResponse(res, 400, 'User not found')
+    if (!user) return invalidResponse(res, 401, 'User not found')
 
     req.userId = decoded.userId
     next()

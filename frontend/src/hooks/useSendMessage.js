@@ -6,30 +6,24 @@ import { useAuthContext } from '../context/AuthContext'
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false)
   const { messages, setMessages, selectedConversation } = useConversation()
-  const {authUser} = useAuthContext()
+  const { authUser } = useAuthContext()
 
   const sendMessage = async (message) => {
     console.log(selectedConversation)
 
     setLoading(true)
     try {
-      let res = null
-      if (selectedConversation.isSelfChat) {
-        res = await fetch(`/api/messages/send/${authUser.id}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ textMessage: message })
+      const res = await fetch(`/api/v2/messages/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId: selectedConversation.id,
+          content: message
         })
-      } else {
-        res = await fetch(`/api/messages/send/${selectedConversation.id}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ textMessage: message })
-        })
-      }
+      })
 
-      res = await res.json()
-      if (!res.success) {
+      const jsonRes = await res.json()
+      if (!jsonRes.success) {
         throw new Error(res.msg)
       }
 

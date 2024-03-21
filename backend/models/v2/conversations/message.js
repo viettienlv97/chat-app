@@ -4,7 +4,7 @@ import sequelize from '../../../config/db.js'
 const Message = sequelize.define(
   'Message',
   {
-    conversationId: {
+    ConversationId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -12,7 +12,7 @@ const Message = sequelize.define(
         key: 'id'
       }
     },
-    authorId: {
+    AuthorId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
