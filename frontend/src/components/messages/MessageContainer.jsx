@@ -12,6 +12,8 @@ const MessageContainer = () => {
   const isSelfChat = selectedConversation?.isSelfChat
   const isFriend = false
 
+  console.log(selectedConversation);
+
   useEffect(() => {
 
     // cleanup function (unmounts)

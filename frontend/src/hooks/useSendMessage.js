@@ -9,25 +9,25 @@ const useSendMessage = () => {
   const { authUser } = useAuthContext()
 
   const sendMessage = async (message) => {
-    console.log(selectedConversation)
-
     setLoading(true)
     try {
       const res = await fetch(`/api/v2/messages/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          receiverId: selectedConversation.partner?.id,
           conversationId: selectedConversation.id,
-          content: message
+          content: message,
+          isSelfChat: selectedConversation.isSelfChat ?? false
         })
       })
 
       const jsonRes = await res.json()
       if (!jsonRes.success) {
-        throw new Error(res.msg)
+        throw new Error(jsonRes.msg)
       }
 
-      setMessages([...messages, res.data])
+      setMessages([...messages, jsonRes.data])
     } catch (error) {
       toast.error(error)
     } finally {

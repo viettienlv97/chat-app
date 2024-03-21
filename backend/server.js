@@ -37,7 +37,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
 
-const syncForce = true
+const syncForce = false
 
 sequelize.sync({force: syncForce}).then(() => {
   console.log(`Drop and Resync with { force: ${syncForce ? 'true' : 'false'} }`)

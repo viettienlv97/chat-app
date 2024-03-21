@@ -10,7 +10,8 @@ import { v4 as uuid } from 'uuid'
 import {
   User,
   Conversation,
-  ConversationParticipant
+  ConversationParticipant,
+  Message
 } from '../../../models/v2/index.js'
 
 export const createConversation = async (req, res) => {

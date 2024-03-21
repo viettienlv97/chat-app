@@ -11,21 +11,15 @@ import { useAuthContext } from '../../context/AuthContext'
 const Conversations = () => {
   const { loading, getConversations } = useGetConversations()
   const { friendsList, setFriendsList } = useConversation()
-  const { conversations } = useConversationContext()
+  const { conversations, setConversations } = useConversationContext()
   const { onlineUsers } = useSocketContext()
   const { authUser } = useAuthContext()
 
   useEffect(() => {
-    console.log('Re-render')
-    console.log('conversations', conversations)
-    console.log(authUser);
-    console.log('authUser.selfchat', authUser?.isOpenSelfChat || null)
-    return () => {}
-  }, [friendsList, onlineUsers])
-
-  useEffect(() => {
     getConversations()
-    // return () => {}
+    return () => {
+      setConversations([])
+    }
   }, [authUser?.isOpenSelfChat, friendsList])
 
   return (
