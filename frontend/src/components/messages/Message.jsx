@@ -6,12 +6,13 @@ import { extractTime } from '../../utils/extractTime'
 const Message = ({message}) => {
   const {authUser} = useAuthContext()
   const {selectedConversation} = useConversation()
-  const fromMe = message?.senderId === authUser.id
-  const formatedTime = extractTime(message.createdAt)
+  console.log(selectedConversation);
+  const fromMe = message?.AuthorId === authUser.id
+  const formatedTime = extractTime(message?.createdAt)
   const chatClassName = fromMe ? 'chat-end' : 'chat-start'
   const profilePic = fromMe ? authUser.profilePic : selectedConversation?.profilePic
   const bubbleBgColor = fromMe ? 'bg-blue-500' : ''
-  const shakeClass = message.shouldShake ? 'shake' : ''
+  const shakeClass = message?.shouldShake ? 'shake' : ''
 
   return (
     <div className={`chat ${chatClassName}`}>
@@ -20,7 +21,7 @@ const Message = ({message}) => {
                 <img src={profilePic} alt="" />
             </div>
         </div>
-        <div className={`chat-bubble text-white pb-2 ${bubbleBgColor} ${shakeClass}`}>{message.message}</div>
+        <div className={`chat-bubble text-white pb-2 ${bubbleBgColor} ${shakeClass}`}>{message?.content}</div>
         <div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{formatedTime}</div>
     </div>
   )

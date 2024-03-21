@@ -6,9 +6,11 @@ import useListenMessages from '../../hooks/useListenMessages'
 
 const Messages = () => {
   const { messages, loading } = useGetMessages()
+  console.log(messages)
   useListenMessages()
   const lastMessageRef = useRef()
 
+  console.log('messages after useListenMessages', messages)
   useEffect(() => {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })

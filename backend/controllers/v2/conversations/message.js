@@ -1,9 +1,11 @@
-import Message from '../../../models/v2/conversations/message.js'
+import { Op } from 'sequelize'
+import { ConversationParticipant, Message } from '../../../models/v2/index.js'
 import {
   dataResponse,
   invalidResponse,
   serverResponse
 } from '../../../utils/httpResponses.js'
+import { getReceiverSocketId } from '../../../socket/socket.js'
 
 export const sendMessage = async (req, res) => {
   try {
@@ -18,6 +20,18 @@ export const sendMessage = async (req, res) => {
       ConversationId: conversationId,
       content
     })
+
+    const receiverId = await ConversationParticipant.findOne({
+      where: {
+        [Op.and]: [{ ConversationId: conversationId }, {[Op.not]: {UserId: userId}}]
+      }
+    })
+
+    const receiverSocketId = getReceiverSocketId(receiverId)
+    if (receiverSocketId) {
+      // io.to(<socket_id>).emit() used to send events to specific client
+      io.to(receiverSocketId).emit('newMessage', message)
+    }
 
     return dataResponse(res, 200, message)
   } catch (error) {
